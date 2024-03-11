@@ -1,0 +1,37 @@
+scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+extend type Query{
+    post(
+        id:ID @eq,
+        ):Posts! @find
+
+    getPosts:[Posts!]!
+
+    publicView:[Posts!]! @all(scopes:["published"])
+}
+
+extend type Mutation{
+    createPost(post_title:String!, bm_title:String!, en_title: String!, cn_title: String!, post_description:String!, post_status:String!, post_publish_date: DateTime): String!
+    updatePost(id: ID!, post_description:String, post_status:String, post_publish_date: DateTime): Posts @update
+    deletePost(id: ID! @whereKey): Posts @delete
+}
+
+type Posts{
+    id: ID!
+    slug: String!
+    post_title: Title!
+    post_description: String!
+    post_status: String!
+    post_publish_date: DateTime
+    post_is_deleted: Boolean
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type Title{
+    default: String!
+    en: String
+    cn: String
+    bm:String
+}
+
