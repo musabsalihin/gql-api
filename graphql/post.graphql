@@ -1,31 +1,72 @@
-scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+#scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
+#
+#
+#
+extend type Query{
+    post(id:ID): Posts @guard
+    @field(resolver: "App\\GraphQL\\Mutations\\PostMutator@getOnePost")
+}
 
 extend type Query{
-    post(
-        id:ID @eq,
-        ):Posts! @find
+    getPosts:[Posts] @guard
+    @field(resolver: "App\\GraphQL\\Mutations\\PostMutator@getPosts")
+}
 
-    getPosts:[Posts!]!
-
-    publicView:[Posts!]! @all(scopes:["published"])
+extend type Query{
+    publicView:[Posts] @all(scopes:["published"])
 }
 
 extend type Mutation{
-    createPost(post_title:String!, bm_title:String!, en_title: String!, cn_title: String!, post_description:String!, post_status:String!, post_publish_date: DateTime): String!
-    updatePost(id: ID!, post_description:String, post_status:String, post_publish_date: DateTime): Posts @update
-    deletePost(id: ID! @whereKey): Posts @delete
+    postCreate(input: CreatePostInput @spread): String @field(resolver: "App\\GraphQL\\Mutations\\PostMutator@create")
+}
+
+extend type Mutation {
+    updatePost(input: UpdatePostInput @spread): UpdatePostResponse @guard
+    @field(resolver: "App\\GraphQL\\Mutations\\PostMutator@update")
+}
+
+extend type Mutation {
+    deletePost(id: ID): DeletePostResponse @guard
+    @field(resolver: "App\\GraphQL\\Mutations\\PostMutator@delete")
 }
 
 type Posts{
     id: ID!
-    slug: String!
+    slug: String
     post_title: Title!
-    post_description: String!
-    post_status: String!
-    post_publish_date: DateTime
+    post_description: String
+    post_status: String
+    post_publish_date: Date
     post_is_deleted: Boolean
     created_at: DateTime!
     updated_at: DateTime!
+}
+
+input CreatePostInput{
+    post_title:String,
+    bm_title:String,
+    en_title: String,
+    cn_title: String,
+    post_description:String,
+    post_status:String,
+    post_publish_date: Date
+}
+
+input UpdatePostInput{
+    id: ID!,
+    post_description:String,
+    post_status:String ,
+    post_publish_date: Date
+}
+
+type UpdatePostResponse{
+    status: String,
+    post: Posts,
+}
+
+type DeletePostResponse{
+    status: String,
 }
 
 type Title{

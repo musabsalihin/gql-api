@@ -16,7 +16,7 @@ class Posts extends Model
 
     public function getSlugOptions():SlugOptions
     {
-        return SlugOptions::create()->generateSlugsFrom("post_description")->saveSlugsTo('slug');
+        return SlugOptions::create()->generateSlugsFrom("post_description")->saveSlugsTo('slug')->slugsShouldBeNoLongerThan(20);
     }
 
     public function getRouteKeyName(){

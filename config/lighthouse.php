@@ -28,8 +28,10 @@ return [
          * make sure to return spec-compliant responses in case an error is thrown.
          */
         'middleware' => [
+//            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+
             // Ensures the request is not vulnerable to cross-site request forgery.
-            // Nuwave\Lighthouse\Http\Middleware\EnsureXHR::class,
+//             Nuwave\Lighthouse\Http\Middleware\EnsureXHR::class,
 
             // Always set the `Accept: application/json` header.
             Nuwave\Lighthouse\Http\Middleware\AcceptJson::class,
@@ -62,8 +64,8 @@ return [
     |
     */
 
-    'guards' => null,
-    // 'guards' => ['sanctum'],
+//    'guards' => ['api'],
+     'guards' => ['sanctum'],
 
     /*
     |--------------------------------------------------------------------------

@@ -9,20 +9,5 @@ class GetPosts
     public function __invoke(null $_, array $args)
     {
         // TODO implement the resolver
-        $posts = Posts::all();
-        foreach($posts as $post){
-            $title = $post->post_title;
-
-            $data = [
-                'default' => $title['default'],
-                'en' => $title['en'],
-                'bm' => $title['bm'],
-                'cn' => $title['cn']
-            ];
-
-            $post->post_title = $data;
-        }
-
-        return $posts;
     }
 }

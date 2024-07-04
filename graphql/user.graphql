@@ -16,10 +16,10 @@ extend type Query {
 
 type Mutation{
     register(
-        name: String!,
-        email: String!,
-        mobile: String!,
-        password: String!,
+        name: String! @rules(apply:["required"]),
+        email: String! @rules(apply: ["required","email"]),
+        mobile: String! @rules(apply:["required","min:10"]),
+        password: String! @rules(apply:["required", "min:6"]),
     ) : String!
 
     login(email:String!, password:String!, device_name: String!): Token!
