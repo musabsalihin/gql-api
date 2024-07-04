@@ -18,16 +18,16 @@ class PostApiTest extends TestCase
     public function test_all_post_can_be_retrieved(): void
     {
             $query = "{
-                  getPosts{
+                getPosts{
                     post_title{
-                      en
-                      default
+                        en
+                        default
                     }
                     post_status
                     post_description
                     post_publish_date
-                  }
-                }";
+                }
+            }";
             $user = User::factory()->create();
 
             $response = $this->actingAs($user)->graphQL($query);
@@ -58,16 +58,16 @@ class PostApiTest extends TestCase
         $post = Posts::factory()->create();
         $user = User::factory()->create();
         $query = "{
-              post(id: " . $post->id . "){
-                post_title{
-                  en
-                  default
-                }
-                post_status
-                post_description
-                post_publish_date
-              }
-            }";
+                    post(id: " . $post->id . "){
+                        post_title{
+                            en
+                            default
+                        }
+                    post_status
+                    post_description
+                    post_publish_date
+                    }
+                }";
 
         $response = $this
             ->actingAs($user)
@@ -98,18 +98,18 @@ class PostApiTest extends TestCase
 
         $query = '
         mutation ($title: String!, $status: String!, $description: String!, $date: Date!) {
-          postCreate(
-            input:
-            {
-            bm_title: "",
-            en_title: $title,
-            cn_title: "",
-            post_title: $title,
-            post_description: $description,
-            post_status: $status,
-            post_publish_date: $date,
-            }
-          )
+            postCreate(
+                input:
+                {
+                bm_title: "",
+                en_title: $title,
+                cn_title: "",
+                post_title: $title,
+                post_description: $description,
+                post_status: $status,
+                post_publish_date: $date,
+                }
+            )
         }
         ';
 
@@ -119,17 +119,13 @@ class PostApiTest extends TestCase
             'description' => $post->post_description,
             'date' => $post->post_publish_date->format('Y-m-d'),
         ]);
-//        dd($post);
-//        $response = $this->graphQL($query2);
-
-//        dd($response);
 
         $this->assertDatabaseHas('posts', [
             'post_description' => $post->post_description,
         ]);
 
         $created_post = Posts::firstWhere('post_description', $post->post_description);
-//        dd($created_post);
+
         $created_post->delete();
 
         $response->assertJsonFragment([
@@ -147,16 +143,17 @@ class PostApiTest extends TestCase
 
         $query = '
         mutation ($title: String!, $status: String!, $description: String!, $date: Date!) {
-          postCreate(
-          input:{
-            bm_title: "",
-            en_title: $title,
-            cn_title: "",
-            post_title: "",
-            post_description: $description,
-            post_status: $status,
-            post_publish_date: $date,
-          })
+        postCreate(
+            input:{
+                bm_title: "",
+                en_title: $title,
+                cn_title: "",
+                post_title: "",
+                post_description: $description,
+                post_status: $status,
+                post_publish_date: $date,
+            }
+            )
         }
     ';
         $response = $this->actingAs($user)->graphQL($query, [
@@ -188,20 +185,20 @@ class PostApiTest extends TestCase
 
         $query = '
             mutation ($id:ID!, $description: String!) {
-                  updatePost(
-                  input:{
-                    id: $id,
-                    post_description: $description
-                  }
-                  ){
-                  status
-                  post{
-                    id
-                    post_title{
-                      default
+                    updatePost(
+                    input:{
+                        id: $id,
+                        post_description: $description
+                    })
+                    {
+                    status
+                        post{
+                            id
+                            post_title{
+                            default
+                            }
+                            post_description
                     }
-                    post_description
-                  }
                 }
             }
         ';
@@ -243,20 +240,20 @@ class PostApiTest extends TestCase
 
         $query = '
             mutation ($id:ID!, $description: String!) {
-                  updatePost(
-                  input:{
+                updatePost(
+                input:{
                     id: $id,
                     post_description: $description
-                  }
-                  ){
-                  status
-                  post{
-                    id
-                    post_title{
-                      default
+                })
+                {
+                status
+                    post{
+                        id
+                        post_title{
+                            default
+                        }
+                        post_description
                     }
-                    post_description
-                  }
                 }
             }
         ';
